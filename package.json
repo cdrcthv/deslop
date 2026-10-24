@@ -1,0 +1,12 @@
+{
+  "name": "@cdrcthv/deslop",
+  "version": "1.0.0",
+  "description": "Stop AI slop: agent skill + commands that make AI write small, human-reviewable code",
+  "type": "module",
+  "bin": { "deslop": "bin/install.js" },
+  "files": ["bin", "skills"],
+  "engines": { "node": ">=18" },
+  "keywords": ["agent-skills", "claude-code", "cursor", "copilot", "code-review", "vibe-coding"],
+  "repository": { "type": "git", "url": "git+https://github.com/cdrcthv/deslop.git" },
+  "license": "MIT"
+}

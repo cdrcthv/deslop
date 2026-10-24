@@ -1,0 +1,11 @@
+{
+  "name": "cdrcthv",
+  "owner": { "name": "cdrcthv" },
+  "plugins": [
+    {
+      "name": "deslop",
+      "source": "./",
+      "description": "Makes AI write small, reviewable, human-readable code, plus /deslop-* cleanup commands"
+    }
+  ]
+}
