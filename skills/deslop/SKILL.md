@@ -223,5 +223,5 @@ To bring an existing codebase in line with these rules, use the commands in
 
 If the user asks for one of these cleanups in plain words ("remove useless
 comments", "find duplicate functions", "audit my repo") read the matching
-command file and follow it. `node scripts/size_report.mjs [path]` lists oversized
+command file and follow it. `npx github:cdrcthv/deslop report [path]` lists oversized
 files and crowded folders (any OS, needs Node).

@@ -3,7 +3,7 @@ description: Reorganize crowded type-based folders into feature folders
 argument-hint: "[folder, default: most crowded]"
 ---
 
-Restructure `$ARGUMENTS` (if empty, the most crowded folder from `size_report.mjs`, see /deslop-audit) so a human finds things at a glance.
+Restructure `$ARGUMENTS` (if empty, the most crowded folder from `npx github:cdrcthv/deslop report`, see /deslop-audit) so a human finds things at a glance.
 
 **Phase 1 — proposal (no edits).**
 - Read the project's existing conventions and framework rules first (routing by file path, Go package rules, .NET namespaces, Nuxt/Next conventions). Never break framework-required locations.

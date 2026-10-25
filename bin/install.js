@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { spawnSync } from "node:child_process";
 import { appendFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,6 +10,7 @@ const skillSrc = join(dirname(fileURLToPath(import.meta.url)), "..", "skills", S
 
 const HELP = `
 Usage: npx github:cdrcthv/deslop [tools] [--project]
+       npx github:cdrcthv/deslop report [path]   List oversized files and crowded folders
 
 Tools (default: --claude):
   --claude      Claude Code
@@ -22,6 +24,10 @@ Scope:
 `;
 
 const args = process.argv.slice(2);
+if (args[0] === "report") {
+  const script = join(skillSrc, "scripts", "size_report.mjs");
+  process.exit(spawnSync(process.execPath, [script, ...args.slice(1)], { stdio: "inherit" }).status ?? 1);
+}
 if (args.includes("-h") || args.includes("--help")) {
   console.log(HELP);
   process.exit(0);

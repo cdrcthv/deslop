@@ -49,6 +49,12 @@ Pick other tools with flags:
 npx github:cdrcthv/deslop --claude --cursor --project
 ```
 
+List oversized files and crowded folders without installing anything:
+
+```bash
+npx github:cdrcthv/deslop report [path]
+```
+
 ### Other AI tools (skill only)
 
 ```bash
