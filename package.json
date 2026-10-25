@@ -5,6 +5,7 @@
   "type": "module",
   "bin": { "deslop": "bin/install.js" },
   "files": ["bin", "skills"],
+  "scripts": { "test": "node --test", "validate": "node scripts/validate.mjs" },
   "engines": { "node": ">=18" },
   "keywords": ["agent-skills", "claude-code", "cursor", "copilot", "code-review", "vibe-coding"],
   "repository": { "type": "git", "url": "git+https://github.com/cdrcthv/deslop.git" },
