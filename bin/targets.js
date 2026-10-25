@@ -16,5 +16,6 @@ export const targets = {
     skills: { global: join(home, ".copilot/skills"), project: ".github/skills" },
     commands: { project: ".github/prompts" },
     commandExt: ".prompt.md",
+    inputSyntax: true,
   },
 };

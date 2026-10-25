@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
-import { appendFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
+import { appendFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { targets } from "./targets.js";
@@ -57,9 +57,16 @@ function installTool(tool) {
   const files = readdirSync(join(skillSrc, "commands")).filter((f) => f.startsWith("deslop-"));
   for (const file of files) {
     const name = file.replace(/\.md$/, target.commandExt ?? ".md");
-    cpSync(join(skillSrc, "commands", file), join(commandDir, name));
+    const from = join(skillSrc, "commands", file);
+    if (target.inputSyntax) writeFileSync(join(commandDir, name), toInputSyntax(readFileSync(from, "utf8")));
+    else cpSync(from, join(commandDir, name));
   }
   console.log(`✓ ${tool}: ${files.length} commands → ${commandDir}`);
+}
+
+function toInputSyntax(text) {
+  const hint = /^argument-hint:\s*"?\[?(.*?)\]?"?\s*$/m.exec(text)?.[1] ?? "arguments";
+  return text.replaceAll("$ARGUMENTS", `\${input:args:${hint.replace(/:/g, " -").replace(/[${}]/g, "")}}`);
 }
 
 function appendAgentsMd() {
