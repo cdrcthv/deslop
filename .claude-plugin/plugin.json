@@ -1,6 +1,6 @@
 {
   "name": "deslop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Makes AI write small, reviewable, human-readable code, plus /deslop-* cleanup commands",
   "commands": "./skills/deslop/commands/",
   "license": "MIT"

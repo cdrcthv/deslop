@@ -1,6 +1,6 @@
 {
   "name": "@cdrcthv/deslop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Stop AI slop: agent skill + commands that make AI write small, human-reviewable code",
   "type": "module",
   "bin": { "deslop": "bin/install.js" },
