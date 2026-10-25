@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import { appendFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { targets } from "./targets.js";
@@ -66,12 +67,25 @@ function uninstallTool(tool) {
   if (commandDir) console.log(`✓ ${tool}: removed ${count} commands from ${commandDir}`);
 }
 
+function pluginInstalled() {
+  try {
+    const file = join(homedir(), ".claude/plugins/installed_plugins.json");
+    return Object.keys(JSON.parse(readFileSync(file, "utf8")).plugins ?? {}).some((k) => k.startsWith(`${SKILL}@`));
+  } catch {
+    return false;
+  }
+}
+
 function installTool(tool) {
   const target = targets[tool];
   const skillDir = join(target.skills[scope], SKILL);
   removeOld(tool);
   cpSync(skillSrc, skillDir, { recursive: true });
   console.log(`✓ ${tool}: skill → ${skillDir}`);
+  if (tool === "claude" && pluginInstalled()) {
+    console.log("  ! the deslop plugin is also installed, so everything loads twice.");
+    console.log("    Remove one: /plugin uninstall deslop@cdrcthv, or --uninstall.");
+  }
 
   const commandDir = target.commands[scope];
   if (!commandDir) {
