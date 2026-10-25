@@ -6,6 +6,7 @@
 - `npm test` and `npm run validate`: repo checks and installer tests
 - CI on Ubuntu, macOS and Windows (Node 18 and 22)
 - Issue templates for bugs and rule suggestions
+- Release workflow: pushing a `v*` tag checks versions and changelog, builds `deslop.skill` and publishes the release
 
 ## [1.0.1] - 2026-10-25
 

@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: Check the tag
+        if: github.ref_type == 'tag'
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main || { echo "::error::$TAG is not on main"; exit 1; }
+          node scripts/release.mjs check "$TAG"
+      - run: npm run validate
+      - run: npm test
+      - name: Build deslop.skill
+        run: |
+          node scripts/release.mjs notes > notes.md
+          (cd skills && zip -rqXD ../deslop.skill deslop)
+          unzip -Z1 deslop.skill | grep -qx deslop/SKILL.md
+          unzip -Z1 deslop.skill
+      - name: Keep the build (dry run)
+        if: github.ref_type != 'tag'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dry-run
+          path: |
+            deslop.skill
+            notes.md
+      - name: Publish
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: gh release create "$TAG" deslop.skill --title "$TAG" --notes-file notes.md --verify-tag
