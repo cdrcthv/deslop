@@ -10,7 +10,7 @@ const repo = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 function copyOfRepo() {
   const dir = mkdtempSync(join(tmpdir(), "deslop-validate-"));
-  for (const path of ["skills", ".claude-plugin", "package.json", "README.md", "LICENSE"]) {
+  for (const path of ["skills", ".claude-plugin", "package.json", "README.md", "LICENSE", "CHANGELOG.md"]) {
     cpSync(join(repo, path), join(dir, path), { recursive: true });
   }
   return dir;
@@ -69,4 +69,9 @@ test("catches a broken link", () => {
 test("catches a command missing from the docs", () => {
   const out = brokenBy("skills/deslop/COMMANDS.md", (t) => t.replaceAll("/deslop-split", "/deslop-other"));
   assert.match(out, /COMMANDS\.md: does not mention \/deslop-split/);
+});
+
+test("catches a version without a changelog section", () => {
+  const out = brokenBy("package.json", (t) => t.replace(/"version": "[^"]+"/, '"version": "9.9.9"'));
+  assert.match(out, /CHANGELOG\.md: no section for version 9\.9\.9/);
 });
