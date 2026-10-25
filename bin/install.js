@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
-import { appendFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { appendFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { targets } from "./targets.js";
@@ -10,6 +10,7 @@ const skillSrc = join(dirname(fileURLToPath(import.meta.url)), "..", "skills", S
 
 const HELP = `
 Usage: npx github:cdrcthv/deslop [tools] [--project]
+       npx github:cdrcthv/deslop --uninstall [tools] [--project]
        npx github:cdrcthv/deslop report [path]   List oversized files and crowded folders
 
 Tools (default: --claude):
@@ -38,13 +39,37 @@ const tools = Object.keys(targets).filter((tool) => args.includes(`--${tool}`));
 const wantsAgentsMd = args.includes("--agents-md");
 if (tools.length === 0 && !wantsAgentsMd) tools.push("claude");
 
+if (args.includes("--uninstall")) {
+  for (const tool of tools) uninstallTool(tool);
+  if (wantsAgentsMd) console.log("  AGENTS.md: remove the deslop section by hand");
+  process.exit(0);
+}
+
 for (const tool of tools) installTool(tool);
 if (wantsAgentsMd) appendAgentsMd();
 console.log("\nDone. Start a new session to load it.");
 
+function removeOld(tool) {
+  const target = targets[tool];
+  const skillDir = join(target.skills[scope], SKILL);
+  const existed = existsSync(skillDir);
+  rmSync(skillDir, { recursive: true, force: true });
+  const commandDir = target.commands[scope];
+  const old = commandDir && existsSync(commandDir) ? readdirSync(commandDir).filter((f) => f.startsWith("deslop-")) : [];
+  for (const file of old) rmSync(join(commandDir, file));
+  return { skillDir, existed, commandDir, count: old.length };
+}
+
+function uninstallTool(tool) {
+  const { skillDir, existed, commandDir, count } = removeOld(tool);
+  console.log(existed ? `✓ ${tool}: removed ${skillDir}` : `  ${tool}: no skill at ${skillDir}`);
+  if (commandDir) console.log(`✓ ${tool}: removed ${count} commands from ${commandDir}`);
+}
+
 function installTool(tool) {
   const target = targets[tool];
   const skillDir = join(target.skills[scope], SKILL);
+  removeOld(tool);
   cpSync(skillSrc, skillDir, { recursive: true });
   console.log(`✓ ${tool}: skill → ${skillDir}`);
 

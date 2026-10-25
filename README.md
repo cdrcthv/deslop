@@ -49,6 +49,12 @@ Pick other tools with flags:
 npx github:cdrcthv/deslop --claude --cursor --project
 ```
 
+Reinstalling replaces the old deslop files. To remove them (same flags as the install):
+
+```bash
+npx github:cdrcthv/deslop --uninstall [--claude] [--cursor] [--copilot] [--project]
+```
+
 List oversized files and crowded folders without installing anything:
 
 ```bash
