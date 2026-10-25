@@ -10,7 +10,7 @@ const repo = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 function copyOfRepo() {
   const dir = mkdtempSync(join(tmpdir(), "deslop-validate-"));
-  for (const path of ["skills", ".claude-plugin", "package.json", "README.md"]) {
+  for (const path of ["skills", ".claude-plugin", "package.json", "README.md", "LICENSE"]) {
     cpSync(join(repo, path), join(dir, path), { recursive: true });
   }
   return dir;
@@ -18,7 +18,7 @@ function copyOfRepo() {
 
 function edit(dir, path, change) {
   const file = join(dir, path);
-  writeFileSync(file, change(readFileSync(file, "utf8")));
+  writeFileSync(file, change(readFileSync(file, "utf8").replace(/\r\n/g, "\n")));
 }
 
 function brokenBy(path, change) {
@@ -33,6 +33,10 @@ function brokenBy(path, change) {
 
 test("the real repo is consistent", () => {
   assert.deepEqual(validate(repo), []);
+});
+
+test("an untouched copy is consistent", () => {
+  assert.equal(brokenBy("package.json", (t) => t), "");
 });
 
 test("catches a version mismatch", () => {
