@@ -1,0 +1,21 @@
+name: Rule suggestion
+description: Propose a new rule, limit or command
+labels: [rule]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What bad AI code does this prevent?
+      description: A short example of the output you keep seeing.
+    validations:
+      required: true
+  - type: textarea
+    id: rule
+    attributes:
+      label: The rule, in one or two sentences
+    validations:
+      required: true
+  - type: input
+    id: stack
+    attributes:
+      label: Language or framework, if specific

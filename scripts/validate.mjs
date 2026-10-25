@@ -49,6 +49,9 @@ export function validate(root) {
   if (pkg && plugin && pkg.version !== plugin.version) {
     errors.push(`version mismatch: package.json ${pkg.version}, plugin.json ${plugin.version}`);
   }
+  if (pkg && !read("CHANGELOG.md").includes(`## [${pkg.version}]`)) {
+    errors.push(`CHANGELOG.md: no section for version ${pkg.version}`);
+  }
   if (plugin?.commands && !existsSync(join(root, plugin.commands))) {
     errors.push(`plugin.json: commands path ${plugin.commands} does not exist`);
   }
