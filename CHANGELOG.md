@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed
+- `/deslop-audit`, `/deslop-structure` and the skill no longer run `npx github:cdrcthv/deslop` (unpinned remote code); they use the installed `scripts/size_report.mjs`
+
 ### Added
 - `npm test` and `npm run validate`: repo checks and installer tests
 - CI on Ubuntu, macOS and Windows (Node 18 and 22)

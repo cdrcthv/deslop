@@ -28,6 +28,12 @@ export function validate(root) {
     }
   }
 
+  for (const file of commandFiles) {
+    if (read(`skills/deslop/commands/${file}`).includes("npx github:")) {
+      errors.push(`commands/${file}: runs remote code with npx, use the local scripts/ instead`);
+    }
+  }
+
   for (const doc of DOCS) {
     const text = read(doc);
     const docDir = dirname(join(root, doc));

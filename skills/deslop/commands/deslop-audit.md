@@ -5,7 +5,7 @@ argument-hint: "[path, default: whole repo]"
 
 Audit `$ARGUMENTS` (whole repo if empty) for human reviewability. **Do not change any code.**
 
-1. Measure sizes: run `npx github:cdrcthv/deslop report $ARGUMENTS` if Node is available; otherwise count lines with your own file tools (don't assume bash — the user may be on Windows).
+1. Measure sizes: run `node scripts/size_report.mjs $ARGUMENTS` from the deslop skill folder (the one with `SKILL.md`) if Node is available; otherwise count lines with your own file tools (don't assume bash — the user may be on Windows).
 2. Scan for, and count:
    - Files over ~300 lines, functions over ~40 lines, folders over ~15 files
    - Duplicate or near-duplicate functions (same purpose, different files)
