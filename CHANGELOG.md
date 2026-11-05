@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-11-05
+
 ### Fixed
 - `/deslop-audit`, `/deslop-structure` and the skill no longer run `npx github:cdrcthv/deslop` (unpinned remote code); they use the installed `scripts/size_report.mjs`
 
