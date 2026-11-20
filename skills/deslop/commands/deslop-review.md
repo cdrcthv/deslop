@@ -3,6 +3,8 @@ description: Review the current branch or diff for human reviewability before me
 argument-hint: "[base branch or commit range, default: main]"
 ---
 
+Before anything else, run `node scripts/update_check.mjs` from the deslop skill folder (the one with `SKILL.md`) if Node is available. It prints nothing unless an update exists; if it prints a line, show it to the user as is, then continue. Never run the update yourself (that is `/deslop-update`).
+
 Review the changes of the current branch against `$ARGUMENTS` (default `main`, or `master` if no `main`). Include uncommitted changes. **Don't edit anything.**
 
 Use `git diff --stat` and `git diff` against the merge base. Check, in order:

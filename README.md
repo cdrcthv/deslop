@@ -71,6 +71,14 @@ Reinstalls deslop wherever it is already installed (every tool, your user
 folder and the current project) and shows the version change.
 Plugin installs update with the plugin manager instead.
 
+`/deslop-audit`, `/deslop-next` and `/deslop-review` print a one-line notice
+when a newer release exists (`/deslop-update` checks on demand). The check
+only reads the latest release number from the GitHub API, at most once a day,
+sends nothing, and stays silent offline or in CI. The update command it prints
+is pinned to that release tag and is only run if you say yes. It needs a tool
+with slash commands and Node: AGENTS.md, Codex and Claude.ai users get no notice,
+so watch the releases page. Turn it off with `DESLOP_NO_UPDATE_CHECK=1`.
+
 ### Other AI tools (skill only)
 
 ```bash
@@ -125,6 +133,7 @@ own git branch, tests before and after, one commit, then stop.
 | `/deslop-split` | Splits long files and functions | File over ~300 lines |
 | `/deslop-structure` | Reorganizes folders by feature | Folder over ~15 files |
 | `/deslop-simplify` | Removes needless abstractions | Quarterly |
+| `/deslop-update` | Checks for a newer deslop and updates it | When told one exists |
 
 All commands accept a path: `/deslop-dupes src/features/cart`.
 No slash commands in your tool? Just ask: *"find duplicate functions in src/"*.

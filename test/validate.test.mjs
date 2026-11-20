@@ -62,6 +62,11 @@ test("catches a command that runs remote code with npx", () => {
   assert.match(out, /deslop-audit\.md: runs remote code/);
 });
 
+test("catches npx with flags or a pinned ref too", () => {
+  const out = brokenBy("skills/deslop/commands/deslop-audit.md", (t) => t + "\nRun `npx -y github:foo/bar#v1.0.0`.\n");
+  assert.match(out, /deslop-audit\.md: runs remote code/);
+});
+
 test("catches a missing referenced file", () => {
   const out = brokenBy("skills/deslop/SKILL.md", (t) => t + "\nSee `references/nope.md`.\n");
   assert.match(out, /references\/nope\.md/);
