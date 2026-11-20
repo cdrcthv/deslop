@@ -29,7 +29,7 @@ export function validate(root) {
   }
 
   for (const file of commandFiles) {
-    if (read(`skills/deslop/commands/${file}`).includes("npx github:")) {
+    if (/npx\b[^\n]*github:/.test(read(`skills/deslop/commands/${file}`))) {
       errors.push(`commands/${file}: runs remote code with npx, use the local scripts/ instead`);
     }
   }

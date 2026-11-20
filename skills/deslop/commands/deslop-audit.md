@@ -3,6 +3,8 @@ description: Read-only audit of the codebase against human-reviewable rules; wri
 argument-hint: "[path, default: whole repo]"
 ---
 
+Before anything else, run `node scripts/update_check.mjs` from the deslop skill folder (the one with `SKILL.md`) if Node is available. It prints nothing unless an update exists; if it prints a line, show it to the user as is, then continue. Never run the update yourself (that is `/deslop-update`).
+
 Audit `$ARGUMENTS` (whole repo if empty) for human reviewability. **Do not change any code.**
 
 1. Measure sizes: run `node scripts/size_report.mjs $ARGUMENTS` from the deslop skill folder (the one with `SKILL.md`) if Node is available; otherwise count lines with your own file tools (don't assume bash — the user may be on Windows).

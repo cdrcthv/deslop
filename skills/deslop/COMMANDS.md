@@ -16,6 +16,7 @@ Every fix step: clean git tree, own branch, tests before/after,
 | `/deslop-split [file]` | Long files/functions → smaller ones | When a file passes ~300 lines |
 | `/deslop-structure [folder]` | Type folders → feature folders | When a folder passes ~15 files |
 | `/deslop-simplify [path]` | Removes needless abstraction | Quarterly, or when code "feels heavy" |
+| `/deslop-update` | Checks for a newer deslop and updates it | When `/deslop-audit`, `-next` or `-review` says one exists |
 
 ## Recommended routines
 

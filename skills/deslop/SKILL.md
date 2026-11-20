@@ -219,7 +219,7 @@ use `references/review-checklist.md`.
 To bring an existing codebase in line with these rules, use the commands in
 `commands/` (see `COMMANDS.md` for when to run each):
 `/deslop-audit`, `/deslop-next`, `/deslop-review`, `/deslop-dupes`, `/deslop-comments`,
-`/deslop-split`, `/deslop-structure`, `/deslop-deadcode`, `/deslop-simplify`.
+`/deslop-split`, `/deslop-structure`, `/deslop-deadcode`, `/deslop-simplify`, `/deslop-update`.
 
 If the user asks for one of these cleanups in plain words ("remove useless
 comments", "find duplicate functions", "audit my repo") read the matching

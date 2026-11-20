@@ -3,6 +3,8 @@ description: Do the next unchecked item from .deslop/audit.md, then stop
 argument-hint: "[item number, default: next unchecked]"
 ---
 
+Before anything else, run `node scripts/update_check.mjs` from the deslop skill folder (the one with `SKILL.md`) if Node is available. It prints nothing unless an update exists; if it prints a line, show it to the user as is, then continue. Never run the update yourself (that is `/deslop-update`).
+
 Open `.deslop/audit.md`. If it doesn't exist, say so and suggest `/deslop-audit` first.
 
 Pick item `$ARGUMENTS`, or the first unchecked `- [ ]` item if empty. Do **only that item**, by following the instructions of the command it names (`/deslop-dupes`, `/deslop-comments`, `/deslop-split`, …) on its scope.
