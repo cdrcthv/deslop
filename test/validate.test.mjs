@@ -80,3 +80,8 @@ test("catches a version without a changelog section", () => {
   const out = brokenBy("package.json", (t) => t.replace(/"version": "[^"]+"/, '"version": "9.9.9"'));
   assert.match(out, /CHANGELOG\.md: no section for version 9\.9\.9/);
 });
+
+test("catches a VERSION file that differs from package.json", () => {
+  const out = brokenBy("skills/deslop/VERSION", () => "0.0.0\n");
+  assert.match(out, /skills\/deslop\/VERSION 0\.0\.0/);
+});

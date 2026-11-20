@@ -12,6 +12,7 @@ const skillSrc = join(dirname(fileURLToPath(import.meta.url)), "..", "skills", S
 const HELP = `
 Usage: npx github:cdrcthv/deslop [tools] [--project]
        npx github:cdrcthv/deslop --uninstall [tools] [--project]
+       npx github:cdrcthv/deslop update          Reinstall wherever deslop is already installed
        npx github:cdrcthv/deslop report [path]   List oversized files and crowded folders
 
 Tools (default: --claude):
@@ -30,27 +31,28 @@ if (args[0] === "report") {
   const script = join(skillSrc, "scripts", "size_report.mjs");
   process.exit(spawnSync(process.execPath, [script, ...args.slice(1)], { stdio: "inherit" }).status ?? 1);
 }
+if (args[0] === "update") process.exit(update());
 if (args.includes("-h") || args.includes("--help")) {
   console.log(HELP);
   process.exit(0);
 }
 
-const scope = args.includes("--project") ? "project" : "global";
+const defaultScope = args.includes("--project") ? "project" : "global";
 const tools = Object.keys(targets).filter((tool) => args.includes(`--${tool}`));
 const wantsAgentsMd = args.includes("--agents-md");
 if (tools.length === 0 && !wantsAgentsMd) tools.push("claude");
 
 if (args.includes("--uninstall")) {
-  for (const tool of tools) uninstallTool(tool);
+  for (const tool of tools) uninstallTool(tool, defaultScope);
   if (wantsAgentsMd) console.log("  AGENTS.md: remove the deslop section by hand");
   process.exit(0);
 }
 
-for (const tool of tools) installTool(tool);
+for (const tool of tools) installTool(tool, defaultScope);
 if (wantsAgentsMd) appendAgentsMd();
 console.log("\nDone. Start a new session to load it.");
 
-function removeOld(tool) {
+function removeOld(tool, scope) {
   const target = targets[tool];
   const skillDir = join(target.skills[scope], SKILL);
   const existed = existsSync(skillDir);
@@ -61,10 +63,39 @@ function removeOld(tool) {
   return { skillDir, existed, commandDir, count: old.length };
 }
 
-function uninstallTool(tool) {
-  const { skillDir, existed, commandDir, count } = removeOld(tool);
+function uninstallTool(tool, scope) {
+  const { skillDir, existed, commandDir, count } = removeOld(tool, scope);
   console.log(existed ? `✓ ${tool}: removed ${skillDir}` : `  ${tool}: no skill at ${skillDir}`);
   if (commandDir) console.log(`✓ ${tool}: removed ${count} commands from ${commandDir}`);
+}
+
+function versionOf(dir) {
+  try {
+    return readFileSync(join(dir, "VERSION"), "utf8").trim();
+  } catch {
+    return "unknown";
+  }
+}
+
+function update() {
+  const found = [];
+  for (const tool of Object.keys(targets)) {
+    for (const scope of ["global", "project"]) {
+      const dir = join(targets[tool].skills[scope], SKILL);
+      if (existsSync(join(dir, "SKILL.md"))) found.push({ tool, scope, from: versionOf(dir) });
+    }
+  }
+  if (found.length === 0) {
+    console.log("No deslop install found. Install it with: npx github:cdrcthv/deslop");
+    return 1;
+  }
+  const to = versionOf(skillSrc);
+  for (const { tool, scope, from } of found) {
+    console.log(`${tool} (${scope}): ${from} → ${to}`);
+    installTool(tool, scope);
+  }
+  console.log("\nDone. Start a new session to load it.");
+  return 0;
 }
 
 function pluginInstalled() {
@@ -76,10 +107,10 @@ function pluginInstalled() {
   }
 }
 
-function installTool(tool) {
+function installTool(tool, scope) {
   const target = targets[tool];
   const skillDir = join(target.skills[scope], SKILL);
-  removeOld(tool);
+  removeOld(tool, scope);
   cpSync(skillSrc, skillDir, { recursive: true });
   console.log(`✓ ${tool}: skill → ${skillDir}`);
   if (tool === "claude" && pluginInstalled()) {
