@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added
+- `npx github:cdrcthv/deslop update` reinstalls deslop wherever it is already installed (every tool, user and project folders) and shows the version change
+- `skills/deslop/VERSION`: the installed version travels with the skill, whatever the install route. Checked against `package.json` by `npm run validate` and the release workflow
+
+### Note
+- 1.0.2 and older have no `VERSION` file: update them once by hand with the install command; later updates can use `update`
+
 ## [1.0.2] - 2026-11-05
 
 ### Fixed

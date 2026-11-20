@@ -55,6 +55,10 @@ export function validate(root) {
   if (pkg && plugin && pkg.version !== plugin.version) {
     errors.push(`version mismatch: package.json ${pkg.version}, plugin.json ${plugin.version}`);
   }
+  const skillVersion = existsSync(join(skillDir, "VERSION")) ? read("skills/deslop/VERSION").trim() : "missing";
+  if (pkg && skillVersion !== pkg.version) {
+    errors.push(`version mismatch: package.json ${pkg.version}, skills/deslop/VERSION ${skillVersion}`);
+  }
   if (pkg && !read("CHANGELOG.md").includes(`## [${pkg.version}]`)) {
     errors.push(`CHANGELOG.md: no section for version ${pkg.version}`);
   }

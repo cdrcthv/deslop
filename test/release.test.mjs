@@ -52,6 +52,16 @@ test("rejects a plugin.json that differs from the tag", () => {
   });
 });
 
+test("rejects a VERSION file that is wrong or missing", () => {
+  withFiles({ "CHANGELOG.md": readFileSync(join(repo, "CHANGELOG.md"), "utf8") }, (dir) => {
+    cpSync(join(repo, ".claude-plugin"), join(dir, ".claude-plugin"), { recursive: true });
+    assert.match(checkTag(dir, `v${current}`).join("\n"), /VERSION is missing/);
+    mkdirSync(join(dir, "skills/deslop"), { recursive: true });
+    writeFileSync(join(dir, "skills/deslop/VERSION"), "0.0.1\n");
+    assert.match(checkTag(dir, `v${current}`).join("\n"), /VERSION is 0\.0\.1/);
+  });
+});
+
 test("rejects a tag that is not v1.2.3", () => {
   assert.match(checkTag(repo, "1.0.1").join("\n"), /is not like v1\.2\.3/);
   assert.match(checkTag(repo, "v1.0.1-rc1").join("\n"), /is not like v1\.2\.3/);

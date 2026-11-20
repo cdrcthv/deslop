@@ -61,6 +61,16 @@ List oversized files and crowded folders without installing anything:
 npx github:cdrcthv/deslop report [path]
 ```
 
+### Update
+
+```bash
+npx github:cdrcthv/deslop update
+```
+
+Reinstalls deslop wherever it is already installed (every tool, your user
+folder and the current project) and shows the version change.
+Plugin installs update with the plugin manager instead.
+
 ### Other AI tools (skill only)
 
 ```bash

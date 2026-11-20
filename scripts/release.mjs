@@ -7,6 +7,14 @@ import { fileURLToPath } from "node:url";
 const read = (root, path) => readFileSync(join(root, path), "utf8").replace(/\r\n/g, "\n");
 const version = (root, path) => JSON.parse(read(root, path)).version;
 
+function readOrNull(root, path) {
+  try {
+    return read(root, path);
+  } catch {
+    return null;
+  }
+}
+
 export function releaseNotes(root, ver) {
   const lines = read(root, "CHANGELOG.md").split("\n");
   const start = lines.findIndex((l) => l.startsWith(`## [${ver}]`));
@@ -21,6 +29,8 @@ export function checkTag(root, tag) {
   for (const file of ["package.json", ".claude-plugin/plugin.json"]) {
     if (`v${version(root, file)}` !== tag) errors.push(`${file} is ${version(root, file)}, tag is ${tag}`);
   }
+  const skillVersion = readOrNull(root, "skills/deslop/VERSION")?.trim();
+  if (`v${skillVersion}` !== tag) errors.push(`skills/deslop/VERSION is ${skillVersion ?? "missing"}, tag is ${tag}`);
   if (!releaseNotes(root, tag.replace(/^v/, ""))) errors.push(`CHANGELOG.md has no notes for ${tag}`);
   return errors;
 }

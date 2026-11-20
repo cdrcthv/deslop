@@ -122,3 +122,31 @@ test("report lists a long file and exits 0", () => {
     assert.match(result.stdout, /Files over 300 lines\n\s+400\s+big\.js/);
   });
 });
+
+test("update reinstalls every existing install and reports versions", () => {
+  sandbox(({ home, project, deslop }) => {
+    deslop("--claude");
+    deslop("--cursor", "--project");
+    writeFileSync(join(home, ".claude/skills/deslop/VERSION"), "0.0.1\n");
+    writeFileSync(join(home, ".claude/skills/deslop/stale.txt"), "");
+    const result = deslop("update");
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /claude \(global\): 0\.0\.1 → \d+\.\d+\.\d+/);
+    assert.match(result.stdout, /cursor \(project\): /);
+    assert.equal(existsSync(join(home, ".claude/skills/deslop/stale.txt")), false);
+    assert.equal(
+      readFileSync(join(home, ".claude/skills/deslop/VERSION"), "utf8"),
+      readFileSync(join(repo, "skills/deslop/VERSION"), "utf8"),
+    );
+    assert.equal(existsSync(join(project, ".claude")), false);
+    assert.equal(existsSync(join(home, ".cursor")), false);
+  });
+});
+
+test("update with nothing installed says so and exits 1", () => {
+  sandbox(({ deslop }) => {
+    const result = deslop("update");
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /No deslop install found/);
+  });
+});
